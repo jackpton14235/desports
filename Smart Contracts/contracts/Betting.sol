@@ -9,7 +9,7 @@ contract Betting {
         mapping(string => bool) private results; 
         // True in case that the game has been finished, false otherwise
         mapping(string => bool) private game_finished;
-        mapping(string => mapping(string => bet)) public bets_by_bettor;
+        mapping(address => mapping(string => Bet)) public bets_by_bettor;
         
 
         // constructor
@@ -28,35 +28,35 @@ contract Betting {
                 bool home;
         }
 
-        function placeBet (string gameID, bool home) external payable{
+        function placeBet (string memory gameID, bool home) external payable{
                 // confirm that the game hasn't happened already
                 require(game_finished[gameID] == false, "The game is over");
-                // burns the amount of currency that was bet on the proposition                
-                Bet bet = new Bet(msg.sender, msg.value, gameID, home);
                 // flaw: this only allows the user to bet one side of the game
-                bets_by_bettor[msg.sender][gameID] = bet;
-                bets[gameID][home] += msg.value;
+                bets_by_bettor[msg.sender][gameID] = 
+                        Bet(msg.sender, msg.value, gameID, home);
+                bet_totals[gameID][home] += msg.value;
         }
 
-        function withdrawGain (string gameID) external {
+        function withdrawGain (string memory gameID) external {
                 // confirm that the game has already happened
                 require(game_finished[gameID] == true, "The game hasn't happened yet");
                 
                 bool winner = results[gameID];
-                Bet bet = bets_by_bettor[msg.sender][gameID];
+                Bet memory bet = bets_by_bettor[msg.sender][gameID];
                 // amount that the bettor wins
+                uint256 win_amount = 0;
                 if (bet.home == winner){
-                        uint256 win_amount = bet.staked + bet_totals[gameID][!winner] * bet.staked / bet_totals[gameID][winner];
+                        win_amount = bet.staked + bet_totals[gameID][!winner] * bet.staked / bet_totals[gameID][winner];
                 }
                 else {
-                        uint256 win_amount = 0;
+                        win_amount = 0;
                 }
-                msg.sender.transfer(win_amount);
+                payable(msg.sender).transfer(win_amount);
         }
 
-        function reportResult(string gameID, bool home) external {
+        function reportResult(string memory gameID, bool home) external {
                 require(oracle == msg.sender, "Only the Oracle can call this function");
-                game_finished[gameID] = True;
+                game_finished[gameID] = true;
                 results[gameID] = home;
         }
 }
