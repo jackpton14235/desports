@@ -1,0 +1,28 @@
+.outer-div {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  gap: 1rem;
+  cursor: pointer;
+  background-color: #DDD;
+  width: fit-content;
+  padding-left: 10px;
+  padding-right: 10px;
+  height: 1.4rem;
+  border-radius: 999px;
+}
+
+.option {
+  line-height: 0;
+  z-index: 2;
+}
+
+.bubble {
+  height: 1.4rem;
+  border-radius: 999px;
+  background-color: #22ff55;
+  position: absolute;
+  left: 0;
+  transition: all 0.3s ease-out;
+  z-index: 1;
+}

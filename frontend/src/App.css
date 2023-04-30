@@ -1,0 +1,186 @@
+:root {
+  --primary: 160;
+  --primary-s: 100%;
+  --gray: 234;
+  --primary-100: hsl(var(--primary), var(--primary-s), 90%);
+  --primary-200: hsl(var(--primary), var(--primary-s), 80%);
+  --primary-300: hsl(var(--primary), var(--primary-s), 70%);
+  --primary-400: hsl(var(--primary), var(--primary-s), 60%);
+  --primary-500: hsl(var(--primary), var(--primary-s), 50%);
+  --primary-600: hsl(var(--primary), var(--primary-s), 40%);
+  --primary-700: hsl(var(--primary), var(--primary-s), 30%);
+  --primary-800: hsl(var(--primary), var(--primary-s), 20%);
+  --primary-900: hsl(var(--primary), var(--primary-s), 10%);
+
+  --light-gray: hsl(var(--gray), 20%, 85%);
+  --med-gray: hsl(var(--gray), 20%, 60%);
+  --dark-gray: hsl(var(--gray), 20%, 40%);
+}
+html {
+  background-color: #F7F7F7;
+}
+
+.outfit {
+  font-family: 'Outfit';
+}
+
+
+h1 {
+  text-align: center;
+  color: var(--primary-700);
+  font-weight: 900;
+  font-size: 3rem;
+  font-family: 'Outfit';
+  margin-bottom: 0.5rem;
+}
+
+.bets-list {
+  margin: auto;
+  left: 0;
+  right: 0;
+  width: 80%;
+  max-width: 1000px;
+  border-radius: 15px;
+  background-color: white;
+  padding-left: 1rem;
+  padding-right: 1rem;
+  border-collapse: separate;
+  border-spacing: 1rem;
+  transform: translateY(2.5rem);
+}
+
+.bets-list tr {
+  border-bottom: 1px var(--light-gray) solid;
+}
+
+.bets-list :last-child {
+  border-bottom: none;
+}
+
+.game-row > td {
+  color: var(--dark-gray);
+}
+
+hr {
+  width: 100%;
+}
+
+p {
+  line-height: 0;
+}
+
+.game-row button {
+  border-radius: 999px;
+  background-color: var(--primary-700);
+  border: none;
+  padding-top: .3rem;
+  padding-bottom: .3rem;
+  padding-left: .75rem;
+  padding-right: .75rem;
+  margin-left: 1rem;
+  margin-right: 1rem;
+  color: white;
+  font-family: 'Outfit';
+  font-weight: 900;
+  cursor: pointer;
+  font-size: 1rem;
+}
+
+.multi-switch {
+  margin: auto;
+  left: 0;
+  right: 0;
+  position: absolute;
+}
+
+.modal-full {
+  position:fixed;
+  background-color: #DDD7;
+  top: 0;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  width: 100vw;
+  height: 100vw;
+  z-index: 3;
+}
+
+.modal-full > div {
+  margin: auto;
+  position: relative;
+  top: 4rem;
+  left: 0;
+  right: 0;
+  background-color: white;
+  border-radius: 50px;
+  width: 80%;
+  max-width: 400px;
+  min-height: 600px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+input::-webkit-outer-spin-button,
+input::-webkit-inner-spin-button {
+    -webkit-appearance: none;
+    margin: 0;
+}
+
+.modal-full input {
+  border-radius: 10px;
+  width: 6rem;
+  height: 3rem;
+  border: 2px var(--primary-700) solid;
+  font-family: 'Outfit';
+  font-size: xx-large;
+  text-align: center;
+  margin: 0;
+}
+
+h2 {
+  color: var(--primary-700);
+  font-family: 'Outfit';
+  font-weight: 700;
+  font-size: xx-large;
+}
+
+
+h3 {
+  color: var(--primary-700);
+  font-family: 'Outfit';
+  font-weight: 700;
+  font-size: x-large;
+  text-align: center;
+  margin: .5rem
+}
+
+.modal-buttons {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-around;
+  width: 70%;
+  /* position: absolute; */
+  /* bottom: 2rem; */
+}
+
+
+.modal-buttons > button {
+  color: white;
+  background-color: var(--primary-700);
+  border-radius: 15px;
+  padding-left: 1.5rem;
+  padding-right: 1.5rem;
+  padding-top: .5rem;
+  padding-bottom: .5rem;
+  border: none;
+  font-size: large;
+  font-weight: 700;
+  cursor: pointer;
+  margin-bottom: 2rem;
+  margin-top: 2rem;
+}
+
+.stretch {
+  flex-grow: 1;
+}
