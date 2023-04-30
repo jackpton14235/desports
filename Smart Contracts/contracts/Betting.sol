@@ -3,10 +3,15 @@ pragma solidity >=0.4.22 <0.9.0;
 
 contract Betting {
         SportsBux private _token;
+        address public oracle;
+        
+        mapping(string => uint256) public bet_totals;
+        mapping(address => bet) public bets_by_bettor;
 
         // constructor
-        constructor (address tokenAddress) {
+        constructor (address tokenAddress, address _oracle) {
                 _token = SportsBux(tokenAddress);
+                oracle = _oracle;
         }
 
         struct bet {
