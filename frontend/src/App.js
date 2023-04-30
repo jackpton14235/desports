@@ -1,8 +1,9 @@
 import logo from "./logo.svg";
 import "./App.css";
 import { MultiSwitch } from "./components/multi-switch";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { BetModal } from "./components/bet-modal";
+import { isWalletConnected } from "./logic/metamask";
 
 const schedule = [
   {
@@ -52,11 +53,15 @@ const myBets = [
   },
 ];
 
-
-
 function App() {
   const [page, setPage] = useState(0);
   const [modal, setModal] = useState(undefined);
+  const [account, setAccount] = useState();
+
+  useEffect(() => {
+    const account = isWalletConnected();
+    setAccount(account);
+  }, []);
 
   function onBet(index, team) {
     setModal([index, team]);
@@ -70,55 +75,61 @@ function App() {
         className="multi-switch outfit"
         setIndex={setPage}
       />
-      {modal && <BetModal 
-      game={schedule[modal[0]]} 
-      team={modal[1]} 
-      cancel={() => setModal(undefined)}
-      submit={() => setModal(undefined)}
-      />}
+      {modal && (
+        <BetModal
+          game={schedule[modal[0]]}
+          team={modal[1]}
+          cancel={() => setModal(undefined)}
+          submit={() => setModal(undefined)}
+        />
+      )}
       {page === 0 ? (
         <table className="bets-list">
-          {schedule.map((game, i) => (
-            <tr className="game-row">
-              <td style={{ textAlign: "left" }}>
-                <button onClick={() => onBet(i, 0)}>Bet</button>
-                {game.opponent0}
-              </td>
-              <td style={{ textAlign: "center" }}>
-                <p style={{ color: game.odds > 0 ? "green" : "red" }}>
-                  {game.odds > 0 ? "+" + game.odds : game.odds}
-                </p>
-                {game.date.toLocaleDateString()}
-                {"\u2022"} {game.date.toLocaleTimeString()}
-              </td>
-              <td style={{ textAlign: "right" }}>
-                {game.opponent1}
-                <button onClick={() => onBet(i, 1)}>Bet</button>
-              </td>
-            </tr>
-          ))}
+          <tbody>
+            {schedule.map((game, i) => (
+              <tr className="game-row">
+                <td style={{ textAlign: "left" }}>
+                  <button onClick={() => onBet(i, 0)}>Bet</button>
+                  {game.opponent0}
+                </td>
+                <td style={{ textAlign: "center" }}>
+                  <p style={{ color: game.odds > 0 ? "green" : "red" }}>
+                    {game.odds > 0 ? "+" + game.odds : game.odds}
+                  </p>
+                  {game.date.toLocaleDateString()}
+                  {"\u2022"} {game.date.toLocaleTimeString()}
+                </td>
+                <td style={{ textAlign: "right" }}>
+                  {game.opponent1}
+                  <button onClick={() => onBet(i, 1)}>Bet</button>
+                </td>
+              </tr>
+            ))}
+          </tbody>
         </table>
       ) : (
         <table className="bets-list">
-          {myBets.map((bet) => (
-            <tr className="outfit">
-              <td>
-                {bet.opponent0} vs {bet.opponent1}
-              </td>
-              <td style={{ textAlign: "center" }}>
-                {bet.bet} coins on{" "}
-                {bet.on === 0 ? bet.opponent0 : bet.opponent1} to win{" "}
-                {getPayout(bet.bet, bet.odds)} (
-                <span style={{ color: bet.odds > 0 ? "green" : "red" }}>
-                  {bet.odds > 0 ? "+" + bet.odds : bet.odds})
-                </span>
-              </td>
-              <td style={{ textAlign: "right" }}>
-                {bet.date.toLocaleDateString()} {"\u2022"}{" "}
-                {bet.date.toLocaleTimeString()}
-              </td>
-            </tr>
-          ))}
+          <tbody>
+            {myBets.map((bet) => (
+              <tr className="outfit">
+                <td>
+                  {bet.opponent0} vs {bet.opponent1}
+                </td>
+                <td style={{ textAlign: "center" }}>
+                  {bet.bet} coins on{" "}
+                  {bet.on === 0 ? bet.opponent0 : bet.opponent1} to win{" "}
+                  {getPayout(bet.bet, bet.odds)} (
+                  <span style={{ color: bet.odds > 0 ? "green" : "red" }}>
+                    {bet.odds > 0 ? "+" + bet.odds : bet.odds})
+                  </span>
+                </td>
+                <td style={{ textAlign: "right" }}>
+                  {bet.date.toLocaleDateString()} {"\u2022"}{" "}
+                  {bet.date.toLocaleTimeString()}
+                </td>
+              </tr>
+            ))}
+          </tbody>
         </table>
       )}
     </div>

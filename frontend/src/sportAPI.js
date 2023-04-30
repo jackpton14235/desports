@@ -1,4 +1,4 @@
-export function getThisWeek() {
+function getThisWeek() {
   // Constants
   const ms_per_day = 86_400_000;
   var myHeaders = new Headers();
@@ -52,3 +52,6 @@ export function getThisWeek() {
     })
     .catch((err) => console.error(err));
 }
+
+
+getThisWeek()
