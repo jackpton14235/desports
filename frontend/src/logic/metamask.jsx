@@ -1,5 +1,5 @@
 import { ethers } from 'ethers';
-import contractJSON from "../../../Smart Contracts/build/contracts/Betting.json";
+import contractJSON from "./Betting.json";
 
 export async function isWalletConnected() {
   const { ethereum } = window;
