@@ -4,6 +4,7 @@ import { MultiSwitch } from "./components/multi-switch";
 import { useEffect, useState } from "react";
 import { BetModal } from "./components/bet-modal";
 import { isWalletConnected } from "./logic/metamask";
+import { testWeb3 } from "./logic/test";
 
 const schedule = [
   {
@@ -66,6 +67,11 @@ function App() {
   function onBet(index, team) {
     setModal([index, team]);
   }
+
+  function testButton() {
+    testWeb3();
+  }
+
   return (
     <div className="App">
       <h1>Sports Betting</h1>
@@ -132,6 +138,7 @@ function App() {
           </tbody>
         </table>
       )}
+      <button onClick={testButton}>TEST</button>
     </div>
   );
 }
