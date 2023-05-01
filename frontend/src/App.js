@@ -4,6 +4,10 @@ import { MultiSwitch } from "./components/multi-switch";
 import { useEffect, useState } from "react";
 import { BetModal } from "./components/bet-modal";
 import { isWalletConnected } from "./logic/metamask";
+import { getThisWeek } from './sportAPI.js';
+
+let games = getThisWeek();
+console.log(games)
 
 const schedule = [
   {
