@@ -5,6 +5,10 @@ import { useEffect, useState } from "react";
 import { BetModal } from "./components/bet-modal";
 import { isWalletConnected } from "./logic/metamask";
 import { testWeb3 } from "./logic/test";
+import { getThisWeek } from './sportAPI.js';
+
+// let games = getThisWeek();
+// console.log(games)
 
 const schedule = [
   {
