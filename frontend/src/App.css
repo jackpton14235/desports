@@ -69,16 +69,15 @@ hr {
   width: 100%;
 }
 
-p {
+/* p {
   line-height: 0;
-}
+} */
 
 .game-row button {
   border-radius: 999px;
   background-color: var(--primary-700);
   border: none;
-  padding-top: .3rem;
-  padding-bottom: .3rem;
+  height: 1.8rem;
   padding-left: .75rem;
   padding-right: .75rem;
   margin-left: 1rem;
@@ -93,6 +92,14 @@ p {
 
 .game-row button:hover {
   transform: scale(1.1);
+}
+
+.game-row img {
+  width: 1.8rem;
+  max-height: 1.8rem;
+  vertical-align: middle;
+  margin-right: .5rem;
+  margin-left: .5rem;
 }
 
 .multi-switch {
@@ -192,4 +199,34 @@ h3 {
 
 .stretch {
   flex-grow: 1;
+}
+
+.flex-row {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+}
+
+.flex-col {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.matchup {
+  width: 100%;
+  justify-content: space-around;
+}
+
+.matchup p {
+  text-align: center;
+  line-height: normal;
+}
+
+.matchup  div {
+  width: 80px;
+}
+
+.matchup  img {
+  width: 80px;
 }

@@ -1,4 +1,3 @@
-import logo from "./logo.svg";
 import "./App.css";
 import { MultiSwitch } from "./components/multi-switch";
 import { useEffect, useState } from "react";
@@ -6,9 +5,7 @@ import { BetModal } from "./components/bet-modal";
 import { isWalletConnected } from "./logic/metamask";
 import { testWeb3 } from "./logic/test";
 import { getThisWeek } from './sportAPI.js';
-
-// let games = getThisWeek();
-// console.log(games)
+import savedGames from './components/temp-data.json';
 
 const schedule = [
   {
@@ -61,10 +58,12 @@ const myBets = [
 function App() {
   const [page, setPage] = useState(0);
   const [modal, setModal] = useState(undefined);
+  const [games, setGames] = useState();
   const [account, setAccount] = useState();
 
   useEffect(() => {
     const account = isWalletConnected();
+    getSavedGames();
     setAccount(account);
   }, []);
 
@@ -76,6 +75,25 @@ function App() {
     testWeb3();
   }
 
+  // used for testing so we don't hit our request limit for api
+  function getSavedGames() {
+    const allGames = savedGames.reduce((all, day) => [...all, ...day.response], [])
+    // .map((_, i, arr) => arr[arr.length - i - 1]);
+    console.log(allGames);
+    setGames(allGames)
+  }
+
+  function getGames() {
+    getThisWeek()
+    .then(res => {
+      console.log(res);
+      const allGames = res.reduce((all, day) => [...all, ...day.response], [])
+      setGames(allGames);
+      console.log(allGames);
+    })
+    .catch(console.error)
+  }
+
   return (
     <div className="App">
       <h1>Sports Betting</h1>
@@ -85,9 +103,12 @@ function App() {
         className="multi-switch outfit"
         setIndex={setPage}
       />
+      <br></br>
+      <br></br>
+      <h3>Upcoming Games</h3>
       {modal && (
         <BetModal
-          game={schedule[modal[0]]}
+          game={games[modal[0]]}
           team={modal[1]}
           cancel={() => setModal(undefined)}
           submit={() => setModal(undefined)}
@@ -96,21 +117,23 @@ function App() {
       {page === 0 ? (
         <table className="bets-list">
           <tbody>
-            {schedule.map((game, i) => (
+            {games?.map((game, i) => (
               <tr className="game-row">
                 <td style={{ textAlign: "left" }}>
                   <button onClick={() => onBet(i, 0)}>Bet</button>
-                  {game.opponent0}
+                  <img src={game.teams.home.logo} alt='' />
+                  {game.teams.home.name}
                 </td>
                 <td style={{ textAlign: "center" }}>
-                  <p style={{ color: game.odds > 0 ? "green" : "red" }}>
+                  {/* <p style={{ color: game.odds > 0 ? "green" : "red" }}>
                     {game.odds > 0 ? "+" + game.odds : game.odds}
-                  </p>
-                  {game.date.toLocaleDateString()}
-                  {"\u2022"} {game.date.toLocaleTimeString()}
+                  </p> */}
+                  {new Date(game.timestamp * 1000).toLocaleDateString()}
+                  {"\u2022"} {new Date(game.timestamp * 1000).toLocaleTimeString()}
                 </td>
                 <td style={{ textAlign: "right" }}>
-                  {game.opponent1}
+                  {game.teams.away.name}
+                  <img src={game.teams.away.logo} alt='' />
                   <button onClick={() => onBet(i, 1)}>Bet</button>
                 </td>
               </tr>
@@ -143,6 +166,7 @@ function App() {
         </table>
       )}
       <button onClick={testButton}>TEST</button>
+      <button onClick={getSavedGames}>Get games</button>
     </div>
   );
 }
