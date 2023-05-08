@@ -28,6 +28,11 @@ contract Betting {
                 bool home;
         }
 
+        function getBets (string memory gameID) public view returns (uint256, uint256) {
+                require(game_finished[gameID] == false, "The game is over or doesn't exist");
+                return (bet_totals[gameID][true], bet_totals[gameID][false]);
+        }
+
         function placeBet (string memory gameID, bool home) external payable{
                 // confirm that the game hasn't happened already
                 require(game_finished[gameID] == false, "The game is over");
