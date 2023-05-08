@@ -52,7 +52,12 @@ const createRequest = (input, callback) => {
       // result key. This allows different adapters to be compatible with
       // one another.
       const scores = response.data.response[0].scores
-      const homeWon = scores.home.total > scores.away.total
+      const homeScore = scores.home.total
+      const awayScore = scores.away.total
+      let homeWon = null
+      if (homeScore !== null && awayScore !== null) {
+        homeWon = homeScore > awayScore
+      }
       console.log(homeWon)
       // response.data.result = Requester.validateResultNumber(response.data, [tsyms])
       // console.log(response.data.result)
