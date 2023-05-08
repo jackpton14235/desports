@@ -1,0 +1,3 @@
+[submodule "external-adapter"]
+	path = external-adapter
+	url = https://github.com/thodges-gh/CL-EA-NodeJS-Template
