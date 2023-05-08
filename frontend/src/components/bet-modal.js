@@ -1,8 +1,39 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { getPayout } from "../App";
+import { getBets, placeBet } from "../logic/metamask";
+import Web3 from "web3";
+
+const numberRegex = /[^\d^.]/g;
 
 export function BetModal(props) {
-  const [bet, setBet] = useState(1);
+  const [bet, setBet] = useState('');
+  const [pool, setPool] = useState();
+
+  useEffect(() => {
+    getBets(props.game.id).then(res => {
+      setPool(res);
+    }).catch(console.error);
+  }, [props.game.id]);
+
+  function onSubmit() {
+    const wei = betValid();
+    if (!wei) return;
+    placeBet(wei, props.game.id, props.home)
+    .then(res => {
+      console.log(res);
+      props.close();
+    })
+    .catch(console.error)
+  }
+
+  function betValid() {
+    try {
+      const wei = Web3.utils.toWei(bet, 'ether');
+      return wei;
+    } catch (ex) {
+      return false;
+    }
+  }
 
   return (
     <div className="modal-full">
@@ -19,27 +50,30 @@ export function BetModal(props) {
             <p>{props.game.teams.away.name}</p>
           </div>
         </div>
-
+        {pool &&
+        (
+          <div className="flex-row" style={{justifyContent:'space-around', width:'100%'}}>
+            <p>Pool size: {pool?.home / 1e18}ETH</p>
+            <p>Pool size: {pool?.away / 1e18}ETH</p>
+          </div>
+        )}
         <div style={{ color: props.game.odds > 0 ? "green" : "red" }}>
           {props.game.odds > 0 ? "+" + props.game.odds : props.game.odds}
         </div>
         <div className="stretch"></div>
+        {/* type is text to allow high precision */}
         <input
-          onChange={(e) => setBet(e.target.value)}
+          onChange={(e) => setBet(e.target.value.replace(numberRegex, ''))}
           value={bet}
-          type="number"
+          type="text"
         ></input>
-        <p>
-          Bet {bet} coins on the{" "}
-          {props.team === 0
-            ? props.game.teams.home.name
-            : props.game.teams.away.name}{" "}
-          to win {getPayout(bet, props.game.odds)} coins
+        <p style={{textAlign: "center"}}>
+          Based on current pool sizes, pays out <b>{getPayout(bet.toString(), pool?.home, pool?.away, props.home)}</b> ETH
         </p>
         <div className="stretch"></div>
         <div className="modal-buttons">
-          <button onClick={props.cancel}>Cancel</button>
-          <button onClick={props.submit}>Submit</button>
+          <button onClick={props.close}>Cancel</button>
+          <button onClick={onSubmit} style={{backgroundColor: betValid() ? false : '#bbb'}}>Submit</button>
         </div>
       </div>
     </div>

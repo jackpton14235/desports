@@ -2,10 +2,17 @@ import "./App.css";
 import { MultiSwitch } from "./components/multi-switch";
 import { useEffect, useState } from "react";
 import { BetModal } from "./components/bet-modal";
-import { isWalletConnected } from "./logic/metamask";
+import {
+  getBalances,
+  getBets,
+  isWalletConnected,
+  transfer,
+} from "./logic/metamask";
 import { testWeb3 } from "./logic/test";
-import { getThisWeek } from './sportAPI.js';
-import savedGames from './components/temp-data.json';
+import { getThisWeek } from "./sportAPI.js";
+import savedGames from "./components/temp-data.json";
+import { BigNumber } from "ethers";
+import web3 from "web3";
 
 const schedule = [
   {
@@ -67,8 +74,8 @@ function App() {
     setAccount(account);
   }, []);
 
-  function onBet(index, team) {
-    setModal([index, team]);
+  function onBet(index, home) {
+    setModal([index, home]);
   }
 
   function testButton() {
@@ -77,21 +84,28 @@ function App() {
 
   // used for testing so we don't hit our request limit for api
   function getSavedGames() {
-    const allGames = savedGames.reduce((all, day) => [...all, ...day.response], [])
+    const allGames = savedGames.reduce(
+      (all, day) => [...all, ...day.response],
+      []
+    );
     // .map((_, i, arr) => arr[arr.length - i - 1]);
     console.log(allGames);
-    setGames(allGames)
+    setGames(allGames);
   }
 
   function getGames() {
     getThisWeek()
-    .then(res => {
-      console.log(res);
-      const allGames = res.reduce((all, day) => [...all, ...day.response], [])
-      setGames(allGames);
-      console.log(allGames);
-    })
-    .catch(console.error)
+      .then((res) => {
+        console.log(res);
+        const allGames = res.reduce(
+          (all, day) => [...all, ...day.response],
+          []
+        )
+        .filter(game => game.timestamp * 1000 > Date.now())
+        setGames(allGames);
+        console.log(allGames);
+      })
+      .catch(console.error);
   }
 
   return (
@@ -106,22 +120,23 @@ function App() {
       <br></br>
       <br></br>
       <h3>Upcoming Games</h3>
+      <button onClick={testButton}>TEST</button>
+      <button onClick={getSavedGames}>Get games</button>
       {modal && (
         <BetModal
           game={games[modal[0]]}
-          team={modal[1]}
-          cancel={() => setModal(undefined)}
-          submit={() => setModal(undefined)}
+          home={modal[1]}
+          close={() => setModal(undefined)}
         />
       )}
       {page === 0 ? (
         <table className="bets-list">
           <tbody>
             {games?.map((game, i) => (
-              <tr className="game-row">
+              <tr className="game-row" key={game.id}>
                 <td style={{ textAlign: "left" }}>
-                  <button onClick={() => onBet(i, 0)}>Bet</button>
-                  <img src={game.teams.home.logo} alt='' />
+                  <button onClick={() => onBet(i, true)}>Bet</button>
+                  <img src={game.teams.home.logo} alt="" />
                   {game.teams.home.name}
                 </td>
                 <td style={{ textAlign: "center" }}>
@@ -129,12 +144,13 @@ function App() {
                     {game.odds > 0 ? "+" + game.odds : game.odds}
                   </p> */}
                   {new Date(game.timestamp * 1000).toLocaleDateString()}
-                  {"\u2022"} {new Date(game.timestamp * 1000).toLocaleTimeString()}
+                  {"\u2022"}{" "}
+                  {new Date(game.timestamp * 1000).toLocaleTimeString()}
                 </td>
                 <td style={{ textAlign: "right" }}>
                   {game.teams.away.name}
-                  <img src={game.teams.away.logo} alt='' />
-                  <button onClick={() => onBet(i, 1)}>Bet</button>
+                  <img src={game.teams.away.logo} alt="" />
+                  <button onClick={() => onBet(i, false)}>Bet</button>
                 </td>
               </tr>
             ))}
@@ -165,17 +181,27 @@ function App() {
           </tbody>
         </table>
       )}
-      <button onClick={testButton}>TEST</button>
-      <button onClick={getSavedGames}>Get games</button>
     </div>
   );
 }
 
-export function getPayout(bet, odds) {
-  if (Number(odds) > 0) {
-    return Number(bet) + (Number(bet) / 100) * Number(odds);
-  } else {
-    return (-Number(bet) / Number(odds)) * 100;
+export function getPayout(bet, homePool, awayPool, home) {
+  try {
+    if (bet === "") bet = "0";
+    const betWei = web3.utils.toWei(bet);
+    if (home) {
+      return web3.utils.fromWei(
+        awayPool.mul(betWei).div(homePool.add(betWei)).toString(),
+        "ether"
+      );
+    } else {
+      return web3.utils.fromWei(
+        homePool.mul(betWei).div(awayPool.add(betWei)).toString(),
+        "ether"
+      );
+    }
+  } catch (ex) {
+    return 0;
   }
 }
 

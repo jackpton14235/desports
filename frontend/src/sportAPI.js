@@ -13,7 +13,7 @@ export function getThisWeek() {
 
   // get datetimes for last 7 days
   const now = Date.now();
-  const dates = new Array(7).fill(0).map((_, i) => new Date(now + i * ms_per_day));
+  const dates = new Array(3).fill(0).map((_, i) => new Date(now + i * ms_per_day));
 
   // get list of requests for each day
   const requests = dates.map((date) => {
