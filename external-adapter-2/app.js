@@ -1,4 +1,5 @@
 const createRequest = require('./index').createRequest
+const Web3 = require('web3');
 
 const express = require('express')
 const bodyParser = require('body-parser')
@@ -14,6 +15,12 @@ app.post('/', (req, res) => {
     console.log('Result: ', result)
     res.status(status).json(result)
   })
+})
+
+// ideally would be run by a cron job, but these are not possible
+// in the free version of render.com
+app.post('/payout', () => {
+  
 })
 
 app.listen(port, () => console.log(`Listening on port ${port}!`))
