@@ -28,9 +28,9 @@ contract Betting is ChainlinkClient, ConfirmedOwner {
     // constructor
     constructor (address _oracle) ConfirmedOwner(msg.sender) {
         oracle = _oracle;
-        setChainlinkToken("");
-        setChainlinkOracle("");
-        jobId = "";
+        setChainlinkToken(0x779877A7B0D9E8603169DdbD7836e478b4624789);
+        setChainlinkOracle(0x6090149792dAAeE9D1D568c9f9a6F6B46AA29eFD);
+        jobId = "c1c5e92880894eb6b27d3cae19670aa3";
         fee = (1 * LINK_DIVISIBILITY) / 10;
     }
 

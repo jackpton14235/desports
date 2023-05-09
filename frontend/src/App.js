@@ -144,7 +144,7 @@ function App() {
                     {game.odds > 0 ? "+" + game.odds : game.odds}
                   </p> */}
                   {new Date(game.timestamp * 1000).toLocaleDateString()}
-                  {"\u2022"}{" "}
+                  {"\u2022"}{" "}{game.id}{"\u2022"}{" "}
                   {new Date(game.timestamp * 1000).toLocaleTimeString()}
                 </td>
                 <td style={{ textAlign: "right" }}>
