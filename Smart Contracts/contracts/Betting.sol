@@ -12,6 +12,7 @@ contract Betting is ChainlinkClient, ConfirmedOwner {
     
     mapping(uint256 => mapping(bool => uint256)) public bet_totals;
     // True in the case the home team wins, false in case of away
+    // I don't think we need this anymore but I'm scared to delete it -ER
     mapping(uint256 => bool) private results; 
     // True in case that the game has been finished, false otherwise
     mapping(uint256 => bool) private game_finished;
