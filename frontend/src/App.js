@@ -78,10 +78,6 @@ function App() {
     setModal([index, home]);
   }
 
-  function testButton() {
-    testWeb3();
-  }
-
   // used for testing so we don't hit our request limit for api
   function getSavedGames() {
     const allGames = savedGames.reduce(
@@ -111,17 +107,8 @@ function App() {
   return (
     <div className="App">
       <h1>Sports Betting</h1>
-      <MultiSwitch
-        options={["schedule", "my bets"]}
-        color="hsl(160, 100%, 30%)"
-        className="multi-switch outfit"
-        setIndex={setPage}
-      />
-      <br></br>
       <br></br>
       <h3>Upcoming Games</h3>
-      <button onClick={testButton}>TEST</button>
-      <button onClick={getSavedGames}>Get games</button>
       {modal && (
         <BetModal
           game={games[modal[0]]}
@@ -129,7 +116,6 @@ function App() {
           close={() => setModal(undefined)}
         />
       )}
-      {page === 0 ? (
         <table className="bets-list">
           <tbody>
             {games?.map((game, i) => (
@@ -156,31 +142,6 @@ function App() {
             ))}
           </tbody>
         </table>
-      ) : (
-        <table className="bets-list">
-          <tbody>
-            {myBets.map((bet) => (
-              <tr className="outfit">
-                <td>
-                  {bet.opponent0} vs {bet.opponent1}
-                </td>
-                <td style={{ textAlign: "center" }}>
-                  {bet.bet} coins on{" "}
-                  {bet.on === 0 ? bet.opponent0 : bet.opponent1} to win{" "}
-                  {getPayout(bet.bet, bet.odds)} (
-                  <span style={{ color: bet.odds > 0 ? "green" : "red" }}>
-                    {bet.odds > 0 ? "+" + bet.odds : bet.odds})
-                  </span>
-                </td>
-                <td style={{ textAlign: "right" }}>
-                  {bet.date.toLocaleDateString()} {"\u2022"}{" "}
-                  {bet.date.toLocaleTimeString()}
-                </td>
-              </tr>
-            ))}
-          </tbody>
-        </table>
-      )}
     </div>
   );
 }

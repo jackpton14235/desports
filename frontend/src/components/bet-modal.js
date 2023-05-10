@@ -8,6 +8,7 @@ const numberRegex = /[^\d^.]/g;
 export function BetModal(props) {
   const [bet, setBet] = useState('');
   const [pool, setPool] = useState();
+  const [message, setMessage] = useState('');
 
   useEffect(() => {
     getBets(props.game.id).then(res => {
@@ -18,10 +19,12 @@ export function BetModal(props) {
   function onSubmit() {
     const wei = betValid();
     if (!wei) return;
+    setMessage('Loading');
     placeBet(wei, props.game.id, props.home)
     .then(res => {
       console.log(res);
-      props.close();
+      setMessage('Success');
+      setTimeout(() => props.close(), 1000);
     })
     .catch(console.error)
   }
@@ -52,10 +55,7 @@ export function BetModal(props) {
         </div>
         {pool &&
         (
-          <div className="flex-row" style={{justifyContent:'space-around', width:'100%'}}>
-            <p>Pool size: {pool?.home / 1e18}ETH</p>
-            <p>Pool size: {pool?.away / 1e18}ETH</p>
-          </div>
+          <p>Pool size: {(pool?.home + pool?.away) / 1e18}ETH</p>
         )}
         <div style={{ color: props.game.odds > 0 ? "green" : "red" }}>
           {props.game.odds > 0 ? "+" + props.game.odds : props.game.odds}
@@ -70,6 +70,7 @@ export function BetModal(props) {
         <p style={{textAlign: "center"}}>
           Based on current pool sizes, pays out <b>{getPayout(bet.toString(), pool?.home, pool?.away, props.home)}</b> ETH
         </p>
+        <p>{message}</p>
         <div className="stretch"></div>
         <div className="modal-buttons">
           <button onClick={props.close}>Cancel</button>

@@ -5,7 +5,7 @@ import betsJSON from "./Betting.json";
 import stanbuckJSON from './stanbuck-abi.json';
 
 const stanbuckAddress = '0x275AF1b983c5C11F3949bab71663FB03233931FE';
-const betsAddress = '0x19575dB222cCc5572522f893C508A51bd5975076';
+const betsAddress = '0xae9759cac9521bbdafbe5024b8e70b864c61f320';
 
 export async function isWalletConnected() {
   const { ethereum } = window;
@@ -30,7 +30,6 @@ export async function isWalletConnected() {
 export function placeBet(amount, gameID, home) {
   return new Promise(async (resolve, reject) => {
     try {
-      console.log('HERE', amount, gameID)
       const { ethereum } = window;
       if (!ethereum) reject("window.ethereum not found")
       
@@ -39,7 +38,7 @@ export function placeBet(amount, gameID, home) {
       const contract = new ethers.Contract(betsAddress, betsJSON.abi, signer);
       const txn = await contract.placeBet(gameID.toString(), home, {value: amount});
       await txn.wait();
-      
+      console.log("resolving");
       resolve({signer, contract});
     }
     catch (err) {
@@ -54,7 +53,7 @@ export function getBets(id) {
     try {
       const { ethereum } = window;
       if (!ethereum) reject("window.ethereum not found")
-      
+      console.log("Getting")
       const provider = new ethers.providers.Web3Provider(ethereum);
       const signer = provider.getSigner();
       const contract = new ethers.Contract(betsAddress, betsJSON.abi, signer);
