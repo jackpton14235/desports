@@ -1,10 +1,7 @@
-import { BigNumber, ethers } from 'ethers';
-import Web3 from 'web3';
+import { ethers } from 'ethers';
 
 import betsJSON from "./Betting.json";
-import stanbuckJSON from './stanbuck-abi.json';
 
-const stanbuckAddress = '0x275AF1b983c5C11F3949bab71663FB03233931FE';
 const betsAddress = '0xae9759cac9521bbdafbe5024b8e70b864c61f320';
 
 export async function isWalletConnected() {

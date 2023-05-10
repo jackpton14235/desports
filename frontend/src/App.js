@@ -1,76 +1,19 @@
 import "./App.css";
-import { MultiSwitch } from "./components/multi-switch";
 import { useEffect, useState } from "react";
 import { BetModal } from "./components/bet-modal";
-import {
-  getBalances,
-  getBets,
-  isWalletConnected,
-  transfer,
-} from "./logic/metamask";
-import { testWeb3 } from "./logic/test";
+import { isWalletConnected } from "./logic/metamask";
 import { getThisWeek } from "./sportAPI.js";
 import savedGames from "./components/temp-data.json";
-import { BigNumber } from "ethers";
 import web3 from "web3";
 
-const schedule = [
-  {
-    opponent0: "Chiefs",
-    opponent1: "Packers",
-    date: new Date(2023, 3, 2, 16, 0, 0),
-    odds: 300,
-  },
-  {
-    opponent0: "Nationals",
-    opponent1: "Jets",
-    date: new Date(2023, 3, 4, 16, 0, 0),
-    odds: -200,
-  },
-  {
-    opponent0: "Giants",
-    opponent1: "49ers",
-    date: new Date(2023, 3, 4, 19, 0, 0),
-    odds: 1500,
-  },
-];
-
-const myBets = [
-  {
-    opponent0: "Bengals",
-    opponent1: "Texans",
-    date: new Date(2023, 2, 29, 16, 0, 0),
-    odds: 100,
-    bet: 100,
-    on: 1,
-  },
-  {
-    opponent0: "Chiefs",
-    opponent1: "Seahawks",
-    date: new Date(2023, 229, 2, 20, 0, 0),
-    odds: 450,
-    bet: 200,
-    on: 0,
-  },
-  {
-    opponent0: "Vikings",
-    opponent1: "Patriots",
-    date: new Date(2023, 2, 27, 15, 0, 0),
-    odds: -300,
-    bet: 150,
-    on: 1,
-  },
-];
-
 function App() {
-  const [page, setPage] = useState(0);
   const [modal, setModal] = useState(undefined);
   const [games, setGames] = useState();
   const [account, setAccount] = useState();
 
   useEffect(() => {
     const account = isWalletConnected();
-    getSavedGames();
+    getGames();
     setAccount(account);
   }, []);
 
